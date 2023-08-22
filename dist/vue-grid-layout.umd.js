@@ -1,4 +1,4 @@
-/*! vue-grid-layout - 2.4.0 | (c) 2015, 2022  Gustavo Santos (JBay Solutions) <gustavo.santos@jbaysolutions.com> (http://www.jbaysolutions.com) | https://github.com/jbaysolutions/vue-grid-layout */
+/*! vue-grid-layout - 2.4.0 | (c) 2015, 2023  Gustavo Santos (JBay Solutions) <gustavo.santos@jbaysolutions.com> (http://www.jbaysolutions.com) | https://github.com/jbaysolutions/vue-grid-layout */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory(require("vue"));
@@ -209,6 +209,17 @@ var at = __webpack_require__("02f4")(true);
 // https://tc39.github.io/ecma262/#sec-advancestringindex
 module.exports = function (S, index, unicode) {
   return index + (unicode ? at(S, index).length : 1);
+};
+
+
+/***/ }),
+
+/***/ "07e3":
+/***/ (function(module, exports) {
+
+var hasOwnProperty = {}.hasOwnProperty;
+module.exports = function (it, key) {
+  return hasOwnProperty.call(it, key);
 };
 
 
@@ -609,6 +620,25 @@ detector.isLegacyOpera = function() {
 
 /***/ }),
 
+/***/ "1bc3":
+/***/ (function(module, exports, __webpack_require__) {
+
+// 7.1.1 ToPrimitive(input [, PreferredType])
+var isObject = __webpack_require__("f772");
+// instead of the ES6 spec version, we didn't implement @@toPrimitive case
+// and the second argument - flag - preferred type is a string
+module.exports = function (it, S) {
+  if (!isObject(it)) return it;
+  var fn, val;
+  if (S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it))) return val;
+  if (typeof (fn = it.valueOf) == 'function' && !isObject(val = fn.call(it))) return val;
+  if (!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it))) return val;
+  throw TypeError("Can't convert object to primitive value");
+};
+
+
+/***/ }),
+
 /***/ "1ca7":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -672,6 +702,20 @@ function removeWindowEventListener(event
 
   window.removeEventListener(event, callback);
 }
+
+/***/ }),
+
+/***/ "1ec9":
+/***/ (function(module, exports, __webpack_require__) {
+
+var isObject = __webpack_require__("f772");
+var document = __webpack_require__("e53d").document;
+// typeof document.createElement is 'object' in old IE
+var is = isObject(document) && isObject(document.createElement);
+module.exports = function (it) {
+  return is ? document.createElement(it) : {};
+};
+
 
 /***/ }),
 
@@ -1021,6 +1065,20 @@ function normalizeComponent (
 
 /***/ }),
 
+/***/ "294c":
+/***/ (function(module, exports) {
+
+module.exports = function (exec) {
+  try {
+    return !!exec();
+  } catch (e) {
+    return true;
+  }
+};
+
+
+/***/ }),
+
 /***/ "2aba":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1262,17 +1320,32 @@ module.exports = __webpack_require__("9e1e") ? function (object, key, value) {
 
 /***/ }),
 
+/***/ "35e8":
+/***/ (function(module, exports, __webpack_require__) {
+
+var dP = __webpack_require__("d9f6");
+var createDesc = __webpack_require__("aebd");
+module.exports = __webpack_require__("8e60") ? function (object, key, value) {
+  return dP.f(object, key, createDesc(1, value));
+} : function (object, key, value) {
+  object[key] = value;
+  return object;
+};
+
+
+/***/ }),
+
 /***/ "37c8":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"1705dc22-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/GridLayout.vue?vue&type=template&id=361da5e4&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"item",staticClass:"vue-grid-layout",style:(_vm.mergedStyle)},[_vm._t("default"),_c('grid-item',{directives:[{name:"show",rawName:"v-show",value:(_vm.isDragging),expression:"isDragging"}],staticClass:"vue-grid-placeholder",attrs:{"x":_vm.placeholder.x,"y":_vm.placeholder.y,"w":_vm.placeholder.w,"h":_vm.placeholder.h,"i":_vm.placeholder.i}})],2)}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"774fb967-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/GridLayout.vue?vue&type=template&id=e820bf6e&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"item",staticClass:"vue-grid-layout",style:(_vm.mergedStyle)},[_vm._t("default"),_c('grid-item',{directives:[{name:"show",rawName:"v-show",value:(_vm.isDragging || _vm.isResizing),expression:"isDragging || isResizing"}],staticClass:"vue-grid-placeholder",class:{ 'vue-grid-placeholder-resize': _vm.isResizing },attrs:{"x":_vm.placeholder.x,"y":_vm.placeholder.y,"w":_vm.placeholder.w,"h":_vm.placeholder.h,"i":_vm.placeholder.i}})],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/GridLayout.vue?vue&type=template&id=361da5e4&
+// CONCATENATED MODULE: ./src/components/GridLayout.vue?vue&type=template&id=e820bf6e&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es7.object.get-own-property-descriptors.js
 var es7_object_get_own_property_descriptors = __webpack_require__("8e6e");
@@ -1292,8 +1365,8 @@ var es6_number_is_finite = __webpack_require__("fca0");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom.iterable.js
 var web_dom_iterable = __webpack_require__("ac6a");
 
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
-var defineProperty = __webpack_require__("ade3");
+// EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs2/helpers/esm/defineProperty.js
+var defineProperty = __webpack_require__("bd86");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.number.constructor.js
 var es6_number_constructor = __webpack_require__("c5f6");
@@ -1328,6 +1401,7 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { Object(defineProperty["a" /* default */])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
+//
 //
 //
 //
@@ -1475,6 +1549,7 @@ var elementResizeDetectorMaker = __webpack_require__("eec4");
       mergedStyle: {},
       lastLayoutLength: 0,
       isDragging: false,
+      isResizing: false,
       placeholder: {
         x: 0,
         y: 0,
@@ -1501,16 +1576,22 @@ var elementResizeDetectorMaker = __webpack_require__("eec4");
       self.dragEvent(eventType, i, x, y, h, w);
     };
 
+    self.resizeMoveEventHandler = function (eventType, i, x, y, w, h) {
+      self.resizeMoveEvent(eventType, i, x, y, w, h);
+    };
+
     self._provided.eventBus = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a();
     self.eventBus = self._provided.eventBus;
     self.eventBus.$on('resizeEvent', self.resizeEventHandler);
     self.eventBus.$on('dragEvent', self.dragEventHandler);
+    self.eventBus.$on('resizeMoveEvent', self.resizeMoveEventHandler);
     self.$emit('layout-created', self.layout);
   },
   beforeDestroy: function beforeDestroy() {
     //Remove listeners
     this.eventBus.$off('resizeEvent', this.resizeEventHandler);
     this.eventBus.$off('dragEvent', this.dragEventHandler);
+    this.eventBus.$off('resizeMoveEvent', this.resizeMoveEventHandler);
     this.eventBus.$destroy();
     Object(DOM["c" /* removeWindowEventListener */])("resize", this.onWindowResize);
 
@@ -1567,14 +1648,14 @@ var elementResizeDetectorMaker = __webpack_require__("eec4");
               got set to null in the constructor. It is now time
               to issue layout-ready events as the GridItems have
               their sizes configured properly.
-                The reason for emitting the layout-ready events on
+               The reason for emitting the layout-ready events on
               the next tick is to allow for the newly-emitted
               updateWidth event (above) to have reached the
               children GridItem-s and had their effect, so we're
               sure that they have the final size before we emit
               layout-ready (for this GridLayout) and
               item-layout-ready (for the GridItem-s).
-                This way any client event handlers can reliably
+               This way any client event handlers can reliably
               invistigate stable sizes of GridItem-s.
           */
           this.$nextTick(function () {
@@ -1779,13 +1860,13 @@ var elementResizeDetectorMaker = __webpack_require__("eec4");
         this.placeholder.w = l.w;
         this.placeholder.h = l.h;
         this.$nextTick(function () {
-          this.isDragging = true;
+          this.isResizing = true;
         }); //this.$broadcast("updateWidth", this.width);
 
         this.eventBus.$emit("updateWidth", this.width);
       } else {
         this.$nextTick(function () {
-          this.isDragging = false;
+          this.isResizing = false;
         });
       }
 
@@ -1794,6 +1875,86 @@ var elementResizeDetectorMaker = __webpack_require__("eec4");
       this.eventBus.$emit("compact");
       this.updateHeight();
       if (eventName === 'resizeend') this.$emit('layout-updated', this.layout);
+    },
+    resizeMoveEvent: function resizeMoveEvent(eventName, id, x, y, w, h) {
+      var l = Object(utils["f" /* getLayoutItem */])(this.layout, id);
+      if (l === undefined || l === null) l = {
+        x: 0,
+        y: 0,
+        h: 0,
+        w: 0
+      };
+
+      if (eventName === "resizestart" && !this.verticalCompact) {
+        this.positionsBeforeDrag = this.layout.reduce(function (result, _ref2) {
+          var i = _ref2.i,
+              x = _ref2.x,
+              y = _ref2.y,
+              w = _ref2.w,
+              h = _ref2.h;
+          return _objectSpread(_objectSpread({}, result), {}, Object(defineProperty["a" /* default */])({}, i, {
+            x: x,
+            y: y,
+            w: w,
+            h: h
+          }));
+        }, {});
+      } // Move the element to the dragged location.
+
+
+      this.layout = Object(utils["g" /* moveElement */])(this.layout, l, x, y, true, this.preventCollision);
+      var hasCollisions;
+
+      if (this.preventCollision) {
+        var collisions = Object(utils["e" /* getAllCollisions */])(this.layout, _objectSpread(_objectSpread({}, l), {}, {
+          w: w,
+          h: h
+        })).filter(function (layoutItem) {
+          return layoutItem.i !== l.i;
+        });
+        hasCollisions = collisions.length > 0; // If we're colliding, we need adjust the placeholder.
+
+        if (hasCollisions) {
+          // adjust w && h to maximum allowed space
+          var leastX = Infinity,
+              leastY = Infinity;
+          collisions.forEach(function (layoutItem) {
+            if (layoutItem.x > l.x) leastX = Math.min(leastX, layoutItem.x);
+            if (layoutItem.y > l.y) leastY = Math.min(leastY, layoutItem.y);
+          });
+          if (Number.isFinite(leastX)) l.w = leastX - l.x;
+          if (Number.isFinite(leastY)) l.h = leastY - l.y;
+        }
+      }
+
+      if (!hasCollisions) {
+        l.w = w;
+        l.h = h;
+      }
+
+      if (this.responsive) this.responsiveGridLayout();
+      Object(utils["c" /* compact */])(this.layout, this.verticalCompact);
+      this.eventBus.$emit("compact");
+
+      if (eventName === "resizestart" || eventName === "resizemove") {
+        this.placeholder.i = id;
+        this.placeholder.x = l.x;
+        this.placeholder.y = l.y;
+        this.placeholder.w = l.w;
+        this.placeholder.h = l.h;
+        this.$nextTick(function () {
+          this.isResizing = true;
+        });
+        this.eventBus.$emit("updateWidth", this.width);
+      }
+
+      this.updateHeight();
+
+      if (eventName === 'resizeend') {
+        delete this.positionsBeforeDrag;
+        this.isResizing = false;
+        this.$emit('layout-updated', this.layout);
+      }
     },
     // finds or generates new layouts for set breakpoints
     responsiveGridLayout: function responsiveGridLayout() {
@@ -1912,6 +2073,18 @@ module.exports = function (Constructor, NAME, next) {
 
 /***/ }),
 
+/***/ "454f":
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__("46a7");
+var $Object = __webpack_require__("584a").Object;
+module.exports = function defineProperty(it, key, desc) {
+  return $Object.defineProperty(it, key, desc);
+};
+
+
+/***/ }),
+
 /***/ "456d":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1952,6 +2125,16 @@ module.exports = function (bitmap, value) {
     value: value
   };
 };
+
+
+/***/ }),
+
+/***/ "46a7":
+/***/ (function(module, exports, __webpack_require__) {
+
+var $export = __webpack_require__("63b6");
+// 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
+$export($export.S + $export.F * !__webpack_require__("8e60"), 'Object', { defineProperty: __webpack_require__("d9f6").f });
 
 
 /***/ }),
@@ -2552,6 +2735,15 @@ $export($export.P + $export.F * (fails(function () {
 
 /***/ }),
 
+/***/ "584a":
+/***/ (function(module, exports) {
+
+var core = module.exports = { version: '2.6.12' };
+if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
+
+
+/***/ }),
+
 /***/ "5be5":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2760,6 +2952,75 @@ module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
 
 /***/ }),
 
+/***/ "63b6":
+/***/ (function(module, exports, __webpack_require__) {
+
+var global = __webpack_require__("e53d");
+var core = __webpack_require__("584a");
+var ctx = __webpack_require__("d864");
+var hide = __webpack_require__("35e8");
+var has = __webpack_require__("07e3");
+var PROTOTYPE = 'prototype';
+
+var $export = function (type, name, source) {
+  var IS_FORCED = type & $export.F;
+  var IS_GLOBAL = type & $export.G;
+  var IS_STATIC = type & $export.S;
+  var IS_PROTO = type & $export.P;
+  var IS_BIND = type & $export.B;
+  var IS_WRAP = type & $export.W;
+  var exports = IS_GLOBAL ? core : core[name] || (core[name] = {});
+  var expProto = exports[PROTOTYPE];
+  var target = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE];
+  var key, own, out;
+  if (IS_GLOBAL) source = name;
+  for (key in source) {
+    // contains in native
+    own = !IS_FORCED && target && target[key] !== undefined;
+    if (own && has(exports, key)) continue;
+    // export native or passed
+    out = own ? target[key] : source[key];
+    // prevent global pollution for namespaces
+    exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key]
+    // bind timers to global for call from export context
+    : IS_BIND && own ? ctx(out, global)
+    // wrap global constructors for prevent change them in library
+    : IS_WRAP && target[key] == out ? (function (C) {
+      var F = function (a, b, c) {
+        if (this instanceof C) {
+          switch (arguments.length) {
+            case 0: return new C();
+            case 1: return new C(a);
+            case 2: return new C(a, b);
+          } return new C(a, b, c);
+        } return C.apply(this, arguments);
+      };
+      F[PROTOTYPE] = C[PROTOTYPE];
+      return F;
+    // make static versions for prototype methods
+    })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
+    // export proto methods to core.%CONSTRUCTOR%.methods.%NAME%
+    if (IS_PROTO) {
+      (exports.virtual || (exports.virtual = {}))[key] = out;
+      // export proto methods to core.%CONSTRUCTOR%.prototype.%NAME%
+      if (type & $export.R && expProto && !expProto[key]) hide(expProto, key, out);
+    }
+  }
+};
+// type bitmap
+$export.F = 1;   // forced
+$export.G = 2;   // global
+$export.S = 4;   // static
+$export.P = 8;   // proto
+$export.B = 16;  // bind
+$export.W = 32;  // wrap
+$export.U = 64;  // safe
+$export.R = 128; // real proto method for `library`
+module.exports = $export;
+
+
+/***/ }),
+
 /***/ "6821":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2891,6 +3152,27 @@ module.exports = function (index, length) {
 
 /***/ }),
 
+/***/ "794b":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = !__webpack_require__("8e60") && !__webpack_require__("294c")(function () {
+  return Object.defineProperty(__webpack_require__("1ec9")('div'), 'a', { get: function () { return 7; } }).a != 7;
+});
+
+
+/***/ }),
+
+/***/ "79aa":
+/***/ (function(module, exports) {
+
+module.exports = function (it) {
+  if (typeof it != 'function') throw TypeError(it + ' is not a function!');
+  return it;
+};
+
+
+/***/ }),
+
 /***/ "79e5":
 /***/ (function(module, exports) {
 
@@ -2959,6 +3241,13 @@ module.exports = {};
 
 /***/ }),
 
+/***/ "85f2":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__("454f");
+
+/***/ }),
+
 /***/ "86cc":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3021,6 +3310,17 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__8bbf__;
 
 /***/ }),
 
+/***/ "8e60":
+/***/ (function(module, exports, __webpack_require__) {
+
+// Thank's IE8 for his funny defineProperty
+module.exports = !__webpack_require__("294c")(function () {
+  return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a != 7;
+});
+
+
+/***/ }),
+
 /***/ "8e6e":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3077,12 +3377,9 @@ exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
 /* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("ac6a");
 /* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("cadf");
-/* harmony import */ var core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("456d");
-/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("a2b6");
-
+/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("456d");
+/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("a2b6");
 
 
 
@@ -3176,7 +3473,7 @@ function findOrGenerateResponsiveLayout(orgLayout
 /*: Layout*/
 {
   // If it already exists, just return it.
-  if (layouts[breakpoint]) return Object(_utils__WEBPACK_IMPORTED_MODULE_4__[/* cloneLayout */ "b"])(layouts[breakpoint]); // Find or generate the next layout
+  if (layouts[breakpoint]) return Object(_utils__WEBPACK_IMPORTED_MODULE_3__[/* cloneLayout */ "b"])(layouts[breakpoint]); // Find or generate the next layout
 
   var layout = orgLayout;
   var breakpointsSorted = sortBreakpoints(breakpoints);
@@ -3191,9 +3488,9 @@ function findOrGenerateResponsiveLayout(orgLayout
     }
   }
 
-  layout = Object(_utils__WEBPACK_IMPORTED_MODULE_4__[/* cloneLayout */ "b"])(layout || []); // clone layout so we don't modify existing items
+  layout = Object(_utils__WEBPACK_IMPORTED_MODULE_3__[/* cloneLayout */ "b"])(layout || []); // clone layout so we don't modify existing items
 
-  return Object(_utils__WEBPACK_IMPORTED_MODULE_4__[/* compact */ "c"])(Object(_utils__WEBPACK_IMPORTED_MODULE_4__[/* correctBounds */ "d"])(layout, {
+  return Object(_utils__WEBPACK_IMPORTED_MODULE_3__[/* compact */ "c"])(Object(_utils__WEBPACK_IMPORTED_MODULE_3__[/* correctBounds */ "d"])(layout, {
     cols: cols
   }), verticalCompact);
 }
@@ -3227,9 +3524,9 @@ function generateResponsiveLayout(layout
     break;
   }
   }*/
-  layout = Object(_utils__WEBPACK_IMPORTED_MODULE_4__[/* cloneLayout */ "b"])(layout || []); // clone layout so we don't modify existing items
+  layout = Object(_utils__WEBPACK_IMPORTED_MODULE_3__[/* cloneLayout */ "b"])(layout || []); // clone layout so we don't modify existing items
 
-  return Object(_utils__WEBPACK_IMPORTED_MODULE_4__[/* compact */ "c"])(Object(_utils__WEBPACK_IMPORTED_MODULE_4__[/* correctBounds */ "d"])(layout, {
+  return Object(_utils__WEBPACK_IMPORTED_MODULE_3__[/* compact */ "c"])(Object(_utils__WEBPACK_IMPORTED_MODULE_3__[/* correctBounds */ "d"])(layout, {
     cols: cols
   }), verticalCompact);
 }
@@ -3322,7 +3619,7 @@ exports = module.exports = __webpack_require__("2350")(false);
 
 
 // module
-exports.push([module.i, ".vue-grid-item{-webkit-transition:all .2s ease;transition:all .2s ease;-webkit-transition-property:left,top,right;transition-property:left,top,right}.vue-grid-item.no-touch{-ms-touch-action:none;touch-action:none}.vue-grid-item.cssTransforms{-webkit-transition-property:-webkit-transform;transition-property:-webkit-transform;transition-property:transform;transition-property:transform,-webkit-transform;left:0;right:auto}.vue-grid-item.cssTransforms.render-rtl{left:auto;right:0}.vue-grid-item.resizing{opacity:.6;z-index:3}.vue-grid-item.vue-draggable-dragging{-webkit-transition:none;transition:none;z-index:3}.vue-grid-item.vue-grid-placeholder{background:red;opacity:.2;-webkit-transition-duration:.1s;transition-duration:.1s;z-index:2;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;-o-user-select:none;user-select:none}.vue-grid-item>.vue-resizable-handle{position:absolute;width:20px;height:20px;bottom:0;right:0;background:url(\"data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmZmZmMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjYiIGhlaWdodD0iNiI+PHBhdGggZD0iTTYgNkgwVjQuMmg0LjJWMEg2djZ6IiBvcGFjaXR5PSIuMzAyIi8+PC9zdmc+\");background-position:100% 100%;padding:0 3px 3px 0;background-repeat:no-repeat;background-origin:content-box;-webkit-box-sizing:border-box;box-sizing:border-box;cursor:se-resize}.vue-grid-item>.vue-rtl-resizable-handle{bottom:0;left:0;background:url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbD0ibm9uZSIgZD0iTS0xLTFoMTJ2MTJILTF6Ii8+PGc+PHBhdGggc3Ryb2tlLWxpbmVjYXA9InVuZGVmaW5lZCIgc3Ryb2tlLWxpbmVqb2luPSJ1bmRlZmluZWQiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2U9IiMwMDAiIGZpbGw9Im5vbmUiIGQ9Ik0xNDQuODIxLTM4LjM5M2wtMjAuMzU3LTMxLjc4NSIvPjxwYXRoIHN0cm9rZT0iIzY2NiIgc3Ryb2tlLWxpbmVjYXA9InVuZGVmaW5lZCIgc3Ryb2tlLWxpbmVqb2luPSJ1bmRlZmluZWQiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIgZD0iTS45NDctLjAxOHY5LjEyNU0tLjY1NiA5aDEwLjczIi8+PC9nPjwvc3ZnPg==);background-position:0 100%;padding-left:3px;background-repeat:no-repeat;background-origin:content-box;cursor:sw-resize;right:auto}.vue-grid-item.disable-userselect{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}", ""]);
+exports.push([module.i, ".vue-grid-item{-webkit-transition:all .2s ease;transition:all .2s ease;-webkit-transition-property:left,top,right;transition-property:left,top,right}.vue-grid-item.no-touch{-ms-touch-action:none;touch-action:none}.vue-grid-item.cssTransforms{-webkit-transition-property:-webkit-transform;transition-property:-webkit-transform;transition-property:transform;transition-property:transform,-webkit-transform;left:0;right:auto}.vue-grid-item.cssTransforms.render-rtl{left:auto;right:0}.vue-grid-item.resizing{opacity:.6}.vue-grid-item.resizing,.vue-grid-item.vue-draggable-dragging{-webkit-transition:none;transition:none;z-index:3}.vue-grid-item.vue-grid-placeholder{background:red;opacity:.2;-webkit-transition-duration:.1s;transition-duration:.1s;z-index:2;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;-o-user-select:none;user-select:none}.vue-grid-item.vue-grid-placeholder-resize{-webkit-transition:none;transition:none}.vue-grid-item>.vue-resizable-handle{position:absolute;width:20px;height:20px;bottom:0;right:0;background:url(\"data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmZmZmMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjYiIGhlaWdodD0iNiI+PHBhdGggZD0iTTYgNkgwVjQuMmg0LjJWMEg2djZ6IiBvcGFjaXR5PSIuMzAyIi8+PC9zdmc+\");background-position:100% 100%;padding:0 3px 3px 0;background-repeat:no-repeat;background-origin:content-box;-webkit-box-sizing:border-box;box-sizing:border-box;cursor:se-resize}.vue-grid-item>.vue-rtl-resizable-handle{bottom:0;left:0;background:url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbD0ibm9uZSIgZD0iTS0xLTFoMTJ2MTJILTF6Ii8+PGc+PHBhdGggc3Ryb2tlLWxpbmVjYXA9InVuZGVmaW5lZCIgc3Ryb2tlLWxpbmVqb2luPSJ1bmRlZmluZWQiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2U9IiMwMDAiIGZpbGw9Im5vbmUiIGQ9Ik0xNDQuODIxLTM4LjM5M2wtMjAuMzU3LTMxLjc4NSIvPjxwYXRoIHN0cm9rZT0iIzY2NiIgc3Ryb2tlLWxpbmVjYXA9InVuZGVmaW5lZCIgc3Ryb2tlLWxpbmVqb2luPSJ1bmRlZmluZWQiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIgZD0iTS45NDctLjAxOHY5LjEyNU0tLjY1NiA5aDEwLjczIi8+PC9nPjwvc3ZnPg==);background-position:0 100%;padding-left:3px;background-repeat:no-repeat;background-origin:content-box;cursor:sw-resize;right:auto}.vue-grid-item.disable-userselect{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}", ""]);
 
 // exports
 
@@ -3387,15 +3684,12 @@ module.exports = !__webpack_require__("79e5")(function () {
 /* unused harmony export findAndRemove */
 /* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("a481");
 /* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("cadf");
-/* harmony import */ var core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("456d");
-/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("ac6a");
-/* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("55dd");
-/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_4__);
-
+/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("456d");
+/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("ac6a");
+/* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("55dd");
+/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_3__);
 
 
 
@@ -4425,25 +4719,18 @@ exports.push([module.i, ".vue-grid-layout{position:relative;-webkit-transition:h
 
 /***/ }),
 
-/***/ "ade3":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "aebd":
+/***/ (function(module, exports) {
 
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _defineProperty; });
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
+module.exports = function (bitmap, value) {
+  return {
+    enumerable: !(bitmap & 1),
+    configurable: !(bitmap & 2),
+    writable: !(bitmap & 4),
+    value: value
+  };
+};
 
-  return obj;
-}
 
 /***/ }),
 
@@ -4503,18 +4790,24 @@ __webpack_require__.d(all_namespaceObject, "edgeTarget", function() { return edg
 __webpack_require__.d(all_namespaceObject, "elements", function() { return snappers_elements; });
 __webpack_require__.d(all_namespaceObject, "grid", function() { return grid; });
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"1705dc22-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/GridItem.vue?vue&type=template&id=e7489122&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"774fb967-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/GridItem.vue?vue&type=template&id=90e80ace&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"item",staticClass:"vue-grid-item",class:_vm.classObj,style:(_vm.style)},[_vm._t("default"),(_vm.resizableAndNotStatic)?_c('span',{ref:"handle",class:_vm.resizableHandleClass}):_vm._e()],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/GridItem.vue?vue&type=template&id=e7489122&
+// CONCATENATED MODULE: ./src/components/GridItem.vue?vue&type=template&id=90e80ace&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es7.object.get-own-property-descriptors.js
 var es7_object_get_own_property_descriptors = __webpack_require__("8e6e");
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom.iterable.js
-var web_dom_iterable = __webpack_require__("ac6a");
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.replace.js
+var es6_regexp_replace = __webpack_require__("a481");
+
+// EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs2/helpers/esm/defineProperty.js
+var defineProperty = __webpack_require__("bd86");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.number.is-finite.js
+var es6_number_is_finite = __webpack_require__("fca0");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.iterator.js
 var es6_array_iterator = __webpack_require__("cadf");
@@ -4522,14 +4815,8 @@ var es6_array_iterator = __webpack_require__("cadf");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.keys.js
 var es6_object_keys = __webpack_require__("456d");
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.replace.js
-var es6_regexp_replace = __webpack_require__("a481");
-
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
-var defineProperty = __webpack_require__("ade3");
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.number.is-finite.js
-var es6_number_is_finite = __webpack_require__("fca0");
+// EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom.iterable.js
+var web_dom_iterable = __webpack_require__("ac6a");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -10858,7 +11145,7 @@ const restrictSize = {
   set: size_set,
   defaults: size_defaults
 };
-/* harmony default export */ var size = (makeModifier(restrictSize, 'restrictSize'));
+/* harmony default export */ var restrict_size = (makeModifier(restrictSize, 'restrictSize'));
 
 //# sourceMappingURL=size.js.map
 // CONCATENATED MODULE: ./node_modules/@interactjs/modifiers/snap/pointer.js
@@ -11222,7 +11509,7 @@ const snapEdges = {
   restrictEdges: restrict_edges,
   restrict: restrict_pointer,
   restrictRect: restrict_rect,
-  restrictSize: size,
+  restrictSize: restrict_size,
   snapEdges: snap_edges,
   snap: snap_pointer,
   snapSize: snap_size,
@@ -11526,6 +11813,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -11549,7 +11841,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     /*containerWidth: {
      type: Number,
      required: true
-       },
+      },
      rowHeight: {
      type: Number,
      required: true
@@ -11950,6 +12242,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       }
 
       if (this.isResizing) {
+        if (this.resizing.left) pos.left = this.resizing.left;
         pos.width = this.resizing.width;
         pos.height = this.resizing.height;
       }
@@ -11992,6 +12285,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     },
     handleResize: function handleResize(event) {
       if (this.static) return;
+
+      if (event.edges.left || event.edges.top) {
+        this.handleResizeMove(event);
+        return;
+      }
+
       var position = getControlPosition(event); // Get the current drag point from the event. This is used as the offset.
 
       if (position == null) return; // not possible but satisfies flow
@@ -12020,16 +12319,19 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
         case "resizemove":
           {
-            //                        console.log("### resize => " + event.type + ", lastW=" + this.lastW + ", lastH=" + this.lastH);
-            var coreEvent = createCoreData(this.lastW, this.lastH, x, y);
+            var coreSizeEvent = createCoreData(this.lastW, this.lastH, x, y);
 
-            if (this.renderRtl) {
-              newSize.width = this.resizing.width - coreEvent.deltaX / this.transformScale;
+            if (event.edges.right) {
+              newSize.width = this.resizing.width + coreSizeEvent.deltaX / this.transformScale;
             } else {
-              newSize.width = this.resizing.width + coreEvent.deltaX / this.transformScale;
+              newSize.width = this.resizing.width;
             }
 
-            newSize.height = this.resizing.height + coreEvent.deltaY / this.transformScale; ///console.log("### resize => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
+            if (event.edges.bottom) {
+              newSize.height = this.resizing.height + coreSizeEvent.deltaY / this.transformScale;
+            } else {
+              newSize.height = this.resizing.height;
+            }
 
             this.resizing = newSize;
             break;
@@ -12037,11 +12339,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
         case "resizeend":
           {
-            //console.log("### resize end => x=" +this.innerX + " y=" + this.innerY + " w=" + this.innerW + " h=" + this.innerH);
             pos = this.calcPosition(this.innerX, this.innerY, this.innerW, this.innerH);
             newSize.width = pos.width;
-            newSize.height = pos.height; //                        console.log("### resize end => " + JSON.stringify(newSize));
-
+            newSize.height = pos.height;
             this.resizing = null;
             this.isResizing = false;
             break;
@@ -12050,22 +12350,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 
       pos = this.calcWH(newSize.height, newSize.width);
-
-      if (pos.w < this.minW) {
-        pos.w = this.minW;
-      }
-
-      if (pos.w > this.maxW) {
-        pos.w = this.maxW;
-      }
-
-      if (pos.h < this.minH) {
-        pos.h = this.minH;
-      }
-
-      if (pos.h > this.maxH) {
-        pos.h = this.maxH;
-      }
+      if (pos.w < this.minW) pos.w = this.minW;
+      if (pos.w > this.maxW) pos.w = this.maxW;
+      if (pos.h < this.minH) pos.h = this.minH;
+      if (pos.h > this.maxH) pos.h = this.maxH;
+      if (pos.h < 1) pos.h = 1;
+      if (pos.w < 1) pos.w = 1;
 
       if (pos.h < 1) {
         pos.h = 1;
@@ -12214,6 +12504,135 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       }
 
       this.eventBus.$emit("dragEvent", event.type, this.i, pos.x, pos.y, this.innerH, this.innerW);
+    },
+    handleResizeMove: function handleResizeMove(event) {
+      var _this2 = this;
+
+      var position = getControlPosition(event); // Get the current drag point from the event. This is used as the offset.
+
+      if (position == null) return; // not possible but satisfies flow
+
+      var x = position.x,
+          y = position.y;
+      var newPosition = {
+        width: 0,
+        height: 0,
+        left: 0,
+        top: 0
+      };
+      var size, pos;
+
+      switch (event.type) {
+        case "resizestart":
+          {
+            this.tryMakeResizable();
+            this.previousW = this.innerW;
+            this.previousH = this.innerH;
+            this.previousX = this.innerX;
+            this.previousY = this.innerY;
+            size = this.calcPosition(this.innerX, this.innerY, this.innerW, this.innerH);
+            var parentRect = event.target.offsetParent.getBoundingClientRect();
+            var clientRect = event.target.getBoundingClientRect();
+            var cLeft = clientRect.left / this.transformScale;
+            var pLeft = parentRect.left / this.transformScale;
+            var cTop = clientRect.top / this.transformScale;
+            var pTop = parentRect.top / this.transformScale;
+            newPosition.left = cLeft - pLeft;
+            newPosition.top = cTop - pTop;
+            newPosition.width = size.width;
+            newPosition.height = size.height;
+            this.resizing = newPosition;
+            this.isResizing = true;
+            break;
+          }
+
+        case "resizemove":
+          {
+            var coreSizeEvent = createCoreData(this.lastW, this.lastH, x, y);
+            var deltaX = coreSizeEvent.deltaX / this.transformScale;
+
+            if (event.edges.right) {
+              newPosition.width = this.resizing.width + deltaX;
+              newPosition.left = this.resizing.left;
+            } else if (event.edges.left) {
+              newPosition.width = this.resizing.width - deltaX;
+              newPosition.left = this.resizing.left + deltaX;
+            } else {
+              newPosition.width = this.resizing.width;
+              newPosition.left = this.resizing.left;
+            }
+
+            var deltaY = coreSizeEvent.deltaY / this.transformScale;
+
+            if (event.edges.bottom) {
+              newPosition.height = this.resizing.height + deltaY;
+              newPosition.top = this.resizing.top;
+            } else if (event.edges.top) {
+              newPosition.height = this.resizing.height - deltaY;
+              newPosition.top = this.resizing.top + deltaY;
+            } else {
+              newPosition.height = this.resizing.height;
+              newPosition.top = this.resizing.top;
+            }
+
+            this.resizing = newPosition;
+            break;
+          }
+
+        case "resizeend":
+          {
+            size = this.calcPosition(this.innerX, this.innerY, this.innerW, this.innerH);
+            newPosition.left = size.left;
+            newPosition.top = size.top;
+            newPosition.width = size.width;
+            newPosition.height = size.height; // Transitions fun. We need to apply the position right now, as the next render will be with
+            // a transition, causing weird bouncing. Drop the left offset so the final, grid snapped, offset
+            // is applied.
+
+            delete this.resizing.left; // Create styles.
+
+            this.createStyle(); // Styles have not been written to the element yet, do it now.
+
+            Object.keys(this.style).forEach(function (k) {
+              return event.target.style[k] = _this2.style[k];
+            }); // Trigger the style changes to be applied.
+
+            event.target.offsetTop;
+            this.resizing = null;
+            this.isResizing = false;
+            break;
+          }
+      } // Get new size and position
+
+
+      size = this.calcWH(newPosition.height, newPosition.width + Math.min(newPosition.left, 0));
+      pos = this.calcXY(newPosition.top, newPosition.left);
+      if (size.w < this.minW) size.w = this.minW;
+      if (size.w > this.maxW) size.w = this.maxW;
+      if (size.h < this.minH) size.h = this.minH;
+      if (size.h > this.maxH) size.h = this.maxH;
+      if (size.h < 1) size.h = 1;
+      if (size.w < 1) size.w = 1;
+      this.lastW = x;
+      this.lastH = y;
+
+      if (this.innerX !== pos.x || this.innerY !== pos.y) {
+        this.$emit("move", this.i, pos.x, pos.y);
+      }
+
+      if (event.type === "resizeend" && (this.previousX !== this.innerX || this.previousY !== this.innerY)) {
+        this.$emit("moved", this.i, pos.x, pos.y);
+      }
+
+      if (this.innerW !== size.w || this.innerH !== size.h) {
+        this.$emit("resize", this.i, size.h, size.w, newPosition.height, newPosition.width);
+      }
+
+      if (event.type === "resizeend" && (this.previousW !== this.innerW || this.previousH !== this.innerH)) {
+        this.$emit("resized", this.i, size.h, size.w, newPosition.height, newPosition.width);
+      }
+
+      this.eventBus.$emit("resizeMoveEvent", event.type, this.i, pos.x, pos.y, size.w, size.h);
     },
     calcPosition: function calcPosition(x, y, w, h) {
       var colWidth = this.calcColWidth(); // add rtl support
@@ -12493,6 +12912,31 @@ var component = Object(componentNormalizer["a" /* default */])(
 )
 
 /* harmony default export */ var GridItem = __webpack_exports__["a"] = (component.exports);
+
+/***/ }),
+
+/***/ "bd86":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _defineProperty; });
+/* harmony import */ var _babel_runtime_corejs2_core_js_object_define_property__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("85f2");
+/* harmony import */ var _babel_runtime_corejs2_core_js_object_define_property__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs2_core_js_object_define_property__WEBPACK_IMPORTED_MODULE_0__);
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    _babel_runtime_corejs2_core_js_object_define_property__WEBPACK_IMPORTED_MODULE_0___default()(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
 
 /***/ }),
 
@@ -13618,12 +14062,62 @@ module.exports = {
 
 /***/ }),
 
+/***/ "d864":
+/***/ (function(module, exports, __webpack_require__) {
+
+// optional / simple context binding
+var aFunction = __webpack_require__("79aa");
+module.exports = function (fn, that, length) {
+  aFunction(fn);
+  if (that === undefined) return fn;
+  switch (length) {
+    case 1: return function (a) {
+      return fn.call(that, a);
+    };
+    case 2: return function (a, b) {
+      return fn.call(that, a, b);
+    };
+    case 3: return function (a, b, c) {
+      return fn.call(that, a, b, c);
+    };
+  }
+  return function (/* ...args */) {
+    return fn.apply(that, arguments);
+  };
+};
+
+
+/***/ }),
+
 /***/ "d8e8":
 /***/ (function(module, exports) {
 
 module.exports = function (it) {
   if (typeof it != 'function') throw TypeError(it + ' is not a function!');
   return it;
+};
+
+
+/***/ }),
+
+/***/ "d9f6":
+/***/ (function(module, exports, __webpack_require__) {
+
+var anObject = __webpack_require__("e4ae");
+var IE8_DOM_DEFINE = __webpack_require__("794b");
+var toPrimitive = __webpack_require__("1bc3");
+var dP = Object.defineProperty;
+
+exports.f = __webpack_require__("8e60") ? Object.defineProperty : function defineProperty(O, P, Attributes) {
+  anObject(O);
+  P = toPrimitive(P, true);
+  anObject(Attributes);
+  if (IE8_DOM_DEFINE) try {
+    return dP(O, P, Attributes);
+  } catch (e) { /* empty */ }
+  if ('get' in Attributes || 'set' in Attributes) throw TypeError('Accessors not supported!');
+  if ('value' in Attributes) O[P] = Attributes.value;
+  return O;
 };
 
 
@@ -13647,6 +14141,31 @@ module.exports = (
 /* harmony import */ var _node_modules_vue_style_loader_index_js_ref_6_oneOf_1_0_node_modules_css_loader_index_js_ref_6_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_oneOf_1_2_node_modules_postcss_loader_src_index_js_ref_6_oneOf_1_3_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_GridLayout_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("1156");
 /* harmony import */ var _node_modules_vue_style_loader_index_js_ref_6_oneOf_1_0_node_modules_css_loader_index_js_ref_6_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_oneOf_1_2_node_modules_postcss_loader_src_index_js_ref_6_oneOf_1_3_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_GridLayout_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vue_style_loader_index_js_ref_6_oneOf_1_0_node_modules_css_loader_index_js_ref_6_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_oneOf_1_2_node_modules_postcss_loader_src_index_js_ref_6_oneOf_1_3_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_GridLayout_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
 /* unused harmony reexport * */
+
+
+/***/ }),
+
+/***/ "e4ae":
+/***/ (function(module, exports, __webpack_require__) {
+
+var isObject = __webpack_require__("f772");
+module.exports = function (it) {
+  if (!isObject(it)) throw TypeError(it + ' is not an object!');
+  return it;
+};
+
+
+/***/ }),
+
+/***/ "e53d":
+/***/ (function(module, exports) {
+
+// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
+var global = module.exports = typeof window != 'undefined' && window.Math == Math
+  ? window : typeof self != 'undefined' && self.Math == Math ? self
+  // eslint-disable-next-line no-new-func
+  : Function('return this')();
+if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 
 
 /***/ }),
@@ -14053,6 +14572,16 @@ module.exports = function (object, index, value) {
 var $export = __webpack_require__("5ca1");
 
 $export($export.S + $export.F, 'Object', { assign: __webpack_require__("7333") });
+
+
+/***/ }),
+
+/***/ "f772":
+/***/ (function(module, exports) {
+
+module.exports = function (it) {
+  return typeof it === 'object' ? it !== null : typeof it === 'function';
+};
 
 
 /***/ }),
