@@ -33,12 +33,13 @@
     }
 
     .vue-grid-item.resizing {
+        transition: none;
         opacity: 0.6;
         z-index: 3;
     }
 
     .vue-grid-item.vue-draggable-dragging {
-        transition:none;
+        transition: none;
         z-index: 3;
     }
 
@@ -52,6 +53,10 @@
         -ms-user-select: none;
         -o-user-select: none;
         user-select: none;
+    }
+
+    .vue-grid-item.vue-grid-placeholder-resize {
+        transition: none;
     }
 
     .vue-grid-item > .vue-resizable-handle {
@@ -502,6 +507,7 @@
                     }
                 }
                 if (this.isResizing) {
+                    if (this.resizing.left) pos.left = this.resizing.left
                     pos.width = this.resizing.width;
                     pos.height = this.resizing.height;
                 }
@@ -541,6 +547,12 @@
             },
             handleResize: function (event) {
                 if (this.static) return;
+
+                if (event.edges.left || event.edges.top) {
+                  this.handleResizeMove(event);
+                  return;
+                }
+
                 const position = getControlPosition(event);
                 // Get the current drag point from the event. This is used as the offset.
                 if (position == null) return; // not possible but satisfies flow
@@ -561,25 +573,27 @@
                         break;
                     }
                     case "resizemove": {
-//                        console.log("### resize => " + event.type + ", lastW=" + this.lastW + ", lastH=" + this.lastH);
-                        const coreEvent = createCoreData(this.lastW, this.lastH, x, y);
-                        if (this.renderRtl) {
-                            newSize.width = this.resizing.width - coreEvent.deltaX / this.transformScale;
-                        } else {
-                            newSize.width = this.resizing.width + coreEvent.deltaX / this.transformScale;
-                        }
-                        newSize.height = this.resizing.height + coreEvent.deltaY / this.transformScale;
+                        const coreSizeEvent = createCoreData(this.lastW, this.lastH, x, y);
 
-                        ///console.log("### resize => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
+                        if (event.edges.right) {
+                          newSize.width = this.resizing.width + coreSizeEvent.deltaX / this.transformScale;
+                        } else {
+                          newSize.width = this.resizing.width;
+                        }
+
+                        if (event.edges.bottom) {
+                          newSize.height = this.resizing.height + coreSizeEvent.deltaY / this.transformScale;
+                        } else {
+                          newSize.height = this.resizing.height;
+                        }
+
                         this.resizing = newSize;
                         break;
                     }
                     case "resizeend": {
-                        //console.log("### resize end => x=" +this.innerX + " y=" + this.innerY + " w=" + this.innerW + " h=" + this.innerH);
                         pos = this.calcPosition(this.innerX, this.innerY, this.innerW, this.innerH);
                         newSize.width = pos.width;
                         newSize.height = pos.height;
-//                        console.log("### resize end => " + JSON.stringify(newSize));
                         this.resizing = null;
                         this.isResizing = false;
                         break;
@@ -588,18 +602,12 @@
 
                 // Get new WH
                 pos = this.calcWH(newSize.height, newSize.width);
-                if (pos.w < this.minW) {
-                    pos.w = this.minW;
-                }
-                if (pos.w > this.maxW) {
-                    pos.w = this.maxW;
-                }
-                if (pos.h < this.minH) {
-                    pos.h = this.minH;
-                }
-                if (pos.h > this.maxH) {
-                    pos.h = this.maxH;
-                }
+                if (pos.w < this.minW) pos.w = this.minW;
+                if (pos.w > this.maxW) pos.w = this.maxW;
+                if (pos.h < this.minH) pos.h = this.minH;
+                if (pos.h > this.maxH) pos.h = this.maxH;
+                if (pos.h < 1) pos.h = 1;
+                if (pos.w < 1) pos.w = 1;
 
                 if (pos.h < 1) {
                     pos.h = 1;
@@ -724,6 +732,127 @@
                     this.$emit("moved", this.i, pos.x, pos.y);
                 }
                 this.eventBus.$emit("dragEvent", event.type, this.i, pos.x, pos.y, this.innerH, this.innerW);
+            },
+            handleResizeMove(event) {
+                const position = getControlPosition(event);
+                // Get the current drag point from the event. This is used as the offset.
+                if (position == null) return; // not possible but satisfies flow
+                const {x, y} = position;
+
+                const newPosition = {width: 0, height: 0, left: 0, top: 0};
+                let size, pos;
+                switch (event.type) {
+                    case "resizestart": {
+                        this.tryMakeResizable()
+
+                        this.previousW = this.innerW;
+                        this.previousH = this.innerH;
+                        this.previousX = this.innerX;
+                        this.previousY = this.innerY;
+
+                        size = this.calcPosition(this.innerX, this.innerY, this.innerW, this.innerH);
+
+                        let parentRect = event.target.offsetParent.getBoundingClientRect();
+                        let clientRect = event.target.getBoundingClientRect();
+
+                        const cLeft = clientRect.left / this.transformScale;
+                        const pLeft = parentRect.left / this.transformScale;
+                        const cTop = clientRect.top / this.transformScale;
+                        const pTop = parentRect.top / this.transformScale;
+
+                        newPosition.left = cLeft - pLeft;
+                        newPosition.top = cTop - pTop;
+                        newPosition.width = size.width;
+                        newPosition.height = size.height;
+
+                        this.resizing = newPosition;
+                        this.isResizing = true;
+                        break;
+                    }
+                    case "resizemove": {
+                        const coreSizeEvent = createCoreData(this.lastW, this.lastH, x, y);
+
+                        const deltaX = coreSizeEvent.deltaX / this.transformScale;
+                        if (event.edges.right) {
+                            newPosition.width = this.resizing.width + deltaX;
+                            newPosition.left = this.resizing.left;
+                        } else if (event.edges.left) {
+                            newPosition.width = this.resizing.width - deltaX;
+                            newPosition.left = this.resizing.left + deltaX;
+                        } else {
+                            newPosition.width = this.resizing.width;
+                            newPosition.left = this.resizing.left;
+                        }
+
+                        const deltaY = coreSizeEvent.deltaY / this.transformScale;
+                        if (event.edges.bottom) {
+                            newPosition.height = this.resizing.height + deltaY;
+                            newPosition.top = this.resizing.top;
+                        } else if (event.edges.top) {
+                            newPosition.height = this.resizing.height - deltaY;
+                            newPosition.top = this.resizing.top + deltaY;
+                        } else {
+                            newPosition.height = this.resizing.height;
+                            newPosition.top = this.resizing.top;
+                        }
+
+                        this.resizing = newPosition;
+                        break;
+                    }
+                    case "resizeend": {
+                        size = this.calcPosition(this.innerX, this.innerY, this.innerW, this.innerH);
+                        newPosition.left = size.left;
+                        newPosition.top = size.top;
+                        newPosition.width = size.width;
+                        newPosition.height = size.height;
+
+                        // Transitions fun. We need to apply the position right now, as the next render will be with
+                        // a transition, causing weird bouncing. Drop the left offset so the final, grid snapped, offset
+                        // is applied.
+                        delete this.resizing.left
+                        // Create styles.
+                        this.createStyle()
+                        // Styles have not been written to the element yet, do it now.
+                        Object.keys(this.style).forEach(k => event.target.style[k] = this.style[k])
+                        // Trigger the style changes to be applied.
+                        event.target.offsetTop;
+
+                        this.resizing = null;
+                        this.isResizing = false;
+
+                        break;
+                    }
+                }
+
+                // Get new size and position
+                size = this.calcWH(newPosition.height, newPosition.width + Math.min(newPosition.left, 0));
+                pos = this.calcXY(newPosition.top, newPosition.left);
+
+                if (size.w < this.minW) size.w = this.minW;
+                if (size.w > this.maxW) size.w = this.maxW;
+                if (size.h < this.minH) size.h = this.minH;
+                if (size.h > this.maxH) size.h = this.maxH;
+                if (size.h < 1) size.h = 1;
+                if (size.w < 1) size.w = 1;
+
+                this.lastW = x;
+                this.lastH = y;
+
+                if (this.innerX !== pos.x || this.innerY !== pos.y) {
+                    this.$emit("move", this.i, pos.x, pos.y);
+                }
+                if (event.type === "resizeend" && (this.previousX !== this.innerX || this.previousY !== this.innerY)) {
+                    this.$emit("moved", this.i, pos.x, pos.y);
+                }
+
+                if (this.innerW !== size.w || this.innerH !== size.h) {
+                    this.$emit("resize", this.i, size.h, size.w, newPosition.height, newPosition.width);
+                }
+                if (event.type === "resizeend" && (this.previousW !== this.innerW || this.previousH !== this.innerH)) {
+                    this.$emit("resized", this.i, size.h, size.w, newPosition.height, newPosition.width);
+                }
+
+                this.eventBus.$emit("resizeMoveEvent", event.type, this.i, pos.x, pos.y, size.w, size.h);
             },
             calcPosition: function (x, y, w, h) {
                 const colWidth = this.calcColWidth();

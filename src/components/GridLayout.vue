@@ -2,7 +2,8 @@
     <div ref="item" class="vue-grid-layout" :style="mergedStyle">
         <slot></slot>
         <grid-item class="vue-grid-placeholder"
-                   v-show="isDragging"
+                   :class="{ 'vue-grid-placeholder-resize': isResizing }"
+                   v-show="isDragging || isResizing"
                    :x="placeholder.x"
                    :y="placeholder.y"
                    :w="placeholder.w"
@@ -131,6 +132,7 @@
                 mergedStyle: {},
                 lastLayoutLength: 0,
                 isDragging: false,
+                isResizing: false,
                 placeholder: {
                     x: 0,
                     y: 0,
@@ -155,17 +157,23 @@
                 self.dragEvent(eventType, i, x, y, h, w);
             };
 
+            self.resizeMoveEventHandler = function(eventType, i, x, y, w, h) {
+                self.resizeMoveEvent(eventType, i, x, y, w, h);
+            };
+
             self._provided.eventBus = new Vue();
             self.eventBus = self._provided.eventBus;
             self.eventBus.$on('resizeEvent', self.resizeEventHandler);
             self.eventBus.$on('dragEvent', self.dragEventHandler);
+            self.eventBus.$on('resizeMoveEvent', self.resizeMoveEventHandler);
             self.$emit('layout-created', self.layout);
         },
         beforeDestroy: function(){
             //Remove listeners
             this.eventBus.$off('resizeEvent', this.resizeEventHandler);
             this.eventBus.$off('dragEvent', this.dragEventHandler);
-			this.eventBus.$destroy();
+            this.eventBus.$off('resizeMoveEvent', this.resizeMoveEventHandler);
+            this.eventBus.$destroy();
             removeWindowEventListener("resize", this.onWindowResize);
             if (this.erd) {
                 this.erd.uninstall(this.$refs.item);
@@ -421,14 +429,14 @@
                     this.placeholder.w = l.w;
                     this.placeholder.h = l.h;
                     this.$nextTick(function() {
-                        this.isDragging = true;
+                        this.isResizing = true;
                     });
                     //this.$broadcast("updateWidth", this.width);
                     this.eventBus.$emit("updateWidth", this.width);
 
                 } else {
                     this.$nextTick(function() {
-                        this.isDragging = false;
+                        this.isResizing = false;
                     });
                 }
 
@@ -439,6 +447,71 @@
                 this.updateHeight();
 
                 if (eventName === 'resizeend') this.$emit('layout-updated', this.layout);
+            },
+            resizeMoveEvent: function (eventName, id, x, y, w, h) {
+                let l = getLayoutItem(this.layout, id);
+                if (l === undefined || l === null) l = {x: 0, y: 0, h: 0, w: 0};
+
+                if (eventName === "resizestart" && !this.verticalCompact) {
+                    this.positionsBeforeDrag = this.layout.reduce((result, {i, x, y, w, h}) => ({
+                        ...result,
+                        [i]: {x, y, w, h}
+                    }), {});
+                }
+
+                // Move the element to the dragged location.
+                this.layout = moveElement(this.layout, l, x, y, true, this.preventCollision);
+
+                let hasCollisions;
+                if (this.preventCollision) {
+                    const collisions = getAllCollisions(this.layout, { ...l, w, h }).filter(
+                        layoutItem => layoutItem.i !== l.i
+                    );
+                    hasCollisions = collisions.length > 0;
+
+                    // If we're colliding, we need adjust the placeholder.
+                    if (hasCollisions) {
+                        // adjust w && h to maximum allowed space
+                        let leastX = Infinity,
+                            leastY = Infinity;
+                        collisions.forEach(layoutItem => {
+                            if (layoutItem.x > l.x) leastX = Math.min(leastX, layoutItem.x);
+                            if (layoutItem.y > l.y) leastY = Math.min(leastY, layoutItem.y);
+                        });
+
+                        if (Number.isFinite(leastX)) l.w = leastX - l.x;
+                        if (Number.isFinite(leastY)) l.h = leastY - l.y;
+                    }
+                }
+
+                if (!hasCollisions) {
+                    l.w = w;
+                    l.h = h;
+                }
+
+                if (this.responsive) this.responsiveGridLayout();
+                compact(this.layout, this.verticalCompact);
+                this.eventBus.$emit("compact");
+
+                if (eventName === "resizestart" || eventName === "resizemove") {
+                    this.placeholder.i = id;
+                    this.placeholder.x = l.x;
+                    this.placeholder.y = l.y
+                    this.placeholder.w = l.w;
+                    this.placeholder.h = l.h;
+                    this.$nextTick(function() {
+                        this.isResizing = true;
+                    });
+                    this.eventBus.$emit("updateWidth", this.width);
+                }
+
+
+                this.updateHeight();
+                if (eventName === 'resizeend') {
+                    delete this.positionsBeforeDrag;
+                    this.isResizing = false;
+                    this.$emit('layout-updated', this.layout);
+                }
             },
 
             // finds or generates new layouts for set breakpoints

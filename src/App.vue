@@ -78,6 +78,11 @@
                            :min-y="item.minY"
                            :max-y="item.maxY"
                            :preserve-aspect-ratio="item.preserveAspectRatio"
+                           :resize-option="{
+                             edges: {
+                               left: true, right: true, bottom: true, top: false
+                             }
+                           }"
                            @resize="resize"
                            @move="move"
                            @resized="resized"
@@ -173,7 +178,7 @@
                 resizable: true,
                 mirrored: false,
                 responsive: true,
-                bounded: false,
+                bounded: true,
                 transformScale: 1,
                 preventCollision: false,
                 compact: true,
